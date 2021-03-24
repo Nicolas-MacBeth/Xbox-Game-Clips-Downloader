@@ -7,10 +7,10 @@ import (
 	"net/url"
 )
 
-func getScreenshots(xuid string) []formattedScreenshot {
+func getScreenshots(xuid string, authToken string) []formattedScreenshot {
 	fmt.Println("Getting user screenshots...")
 
-	res := authGetRequest("/" + url.QueryEscape(xuid) + "/screenshots")
+	res := authGetRequest("/"+url.QueryEscape(xuid)+"/screenshots", authToken)
 
 	userScreenshots := []screenshot{}
 	err := json.NewDecoder(res.Body).Decode(&userScreenshots)
@@ -20,7 +20,7 @@ func getScreenshots(xuid string) []formattedScreenshot {
 	defer res.Body.Close()
 
 	for res.Header.Get("X-Continuation-Token") != "" {
-		res = authGetRequest("/" + url.QueryEscape(xuid) + "/screenshots?continuationToken=" + res.Header.Get("X-Continuation-Token"))
+		res = authGetRequest("/"+url.QueryEscape(xuid)+"/screenshots?continuationToken="+res.Header.Get("X-Continuation-Token"), authToken)
 		defer res.Body.Close()
 
 		extraScreenshots := []screenshot{}

@@ -9,20 +9,20 @@ import (
 	"os"
 )
 
-func askUserForGamertag() string {
-	fmt.Println("Please enter your Xbox network gamertag:")
+func askUserForInfo(requestedData string) string {
+	fmt.Println(requestedData)
 	fmt.Print("> ")
 
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
-	gamertag := scanner.Text()
-	return gamertag
+	text := scanner.Text()
+	return text
 }
 
-func getXUID(gamertag string) string {
+func getXUID(gamertag string, authToken string) string {
 	fmt.Println("Getting XUID from gamertag...")
 
-	res := authGetRequest("/xuid/" + url.QueryEscape(gamertag))
+	res := authGetRequest("/xuid/"+url.QueryEscape(gamertag), authToken)
 	str, err := io.ReadAll(res.Body)
 	if err != nil {
 		log.Fatal("Error decoding API response.")

@@ -8,10 +8,11 @@ import (
 
 func main() {
 	greetUser()
-	gamertag := askUserForGamertag()
-	xuid := getXUID(gamertag)
-	clips := getClips(xuid)
-	screenshots := getScreenshots(xuid)
+	authToken := askUserForInfo("Please visit https://xapi.us/ and enter your API key:")
+	gamertag := askUserForInfo("Please enter your Xbox network gamertag:")
+	xuid := getXUID(gamertag, authToken)
+	clips := getClips(xuid, authToken)
+	screenshots := getScreenshots(xuid, authToken)
 	dir := orchestrateDownloads(clips, screenshots)
 	farewellUser(dir)
 }

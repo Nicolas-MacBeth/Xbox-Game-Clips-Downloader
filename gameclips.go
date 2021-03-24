@@ -7,10 +7,10 @@ import (
 	"net/url"
 )
 
-func getClips(xuid string) []formattedClip {
+func getClips(xuid string, authToken string) []formattedClip {
 	fmt.Println("Getting user clips...")
 
-	res := authGetRequest("/" + url.QueryEscape(xuid) + "/game-clips")
+	res := authGetRequest("/"+url.QueryEscape(xuid)+"/game-clips", authToken)
 
 	userClips := []clip{}
 	err := json.NewDecoder(res.Body).Decode(&userClips)
@@ -20,7 +20,7 @@ func getClips(xuid string) []formattedClip {
 	defer res.Body.Close()
 
 	for res.Header.Get("X-Continuation-Token") != "" {
-		res = authGetRequest("/" + url.QueryEscape(xuid) + "/game-clips?continuationToken=" + res.Header.Get("X-Continuation-Token"))
+		res = authGetRequest("/"+url.QueryEscape(xuid)+"/game-clips?continuationToken="+res.Header.Get("X-Continuation-Token"), authToken)
 		defer res.Body.Close()
 
 		extraClips := []clip{}

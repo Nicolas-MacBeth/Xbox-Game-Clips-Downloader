@@ -9,11 +9,10 @@ import (
 )
 
 const (
-	baseURL   = "https://xapi.us/v2"
-	authToken = ""
+	baseURL = "https://xapi.us/v2"
 )
 
-func authGetRequest(urlSuffix string) *http.Response {
+func authGetRequest(urlSuffix string, authToken string) *http.Response {
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", baseURL+urlSuffix, nil)
 	req.Header.Set("X-AUTH", authToken)
@@ -42,7 +41,6 @@ func prepareDir() string {
 		t.Hour(), t.Minute(), t.Second())
 	err := os.Mkdir(folderPath, os.ModePerm)
 	if err != nil {
-		fmt.Println(err)
 		log.Fatal("Unable to create target download folder. Do you have the correct permissions?")
 	}
 	return folderPath
