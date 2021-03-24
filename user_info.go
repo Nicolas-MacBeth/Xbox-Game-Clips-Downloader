@@ -22,7 +22,7 @@ func askUserForGamertag() string {
 func getXUID(gamertag string) string {
 	fmt.Println("Getting XUID from gamertag...")
 
-	res := httpGetRequest("/xuid/" + url.QueryEscape(gamertag))
+	res := authGetRequest("/xuid/" + url.QueryEscape(gamertag))
 	str, err := io.ReadAll(res.Body)
 	if err != nil {
 		log.Fatal("Error decoding API response.")

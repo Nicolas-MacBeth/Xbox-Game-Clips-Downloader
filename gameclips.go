@@ -10,7 +10,7 @@ import (
 func getClips(xuid string) []formattedClip {
 	fmt.Println("Getting user clips...")
 
-	res := httpGetRequest("/" + url.QueryEscape(xuid) + "/game-clips")
+	res := authGetRequest("/" + url.QueryEscape(xuid) + "/game-clips")
 
 	userClips := []clip{}
 	err := json.NewDecoder(res.Body).Decode(&userClips)
@@ -20,7 +20,7 @@ func getClips(xuid string) []formattedClip {
 	defer res.Body.Close()
 
 	for res.Header.Get("X-Continuation-Token") != "" {
-		res = httpGetRequest("/" + url.QueryEscape(xuid) + "/game-clips?continuationToken=" + res.Header.Get("X-Continuation-Token"))
+		res = authGetRequest("/" + url.QueryEscape(xuid) + "/game-clips?continuationToken=" + res.Header.Get("X-Continuation-Token"))
 		defer res.Body.Close()
 
 		extraClips := []clip{}
@@ -43,7 +43,8 @@ func extractClipsMetadata(userClips *[]clip, filetype string) []formattedClip {
 		for _, uri := range clip.Gameclipuris {
 			if uri.Uritype == "Download" {
 				formattedClip.URI = uri.URI
-				formattedClip.gameTitle = clip.Titlename
+				formattedClip.GameTitle = clip.Titlename
+				formattedClip.ID = clip.Gameclipid
 				bytes += uri.Filesize
 				break
 			}

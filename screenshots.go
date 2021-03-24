@@ -10,7 +10,7 @@ import (
 func getScreenshots(xuid string) []formattedScreenshot {
 	fmt.Println("Getting user screenshots...")
 
-	res := httpGetRequest("/" + url.QueryEscape(xuid) + "/screenshots")
+	res := authGetRequest("/" + url.QueryEscape(xuid) + "/screenshots")
 
 	userScreenshots := []screenshot{}
 	err := json.NewDecoder(res.Body).Decode(&userScreenshots)
@@ -20,7 +20,7 @@ func getScreenshots(xuid string) []formattedScreenshot {
 	defer res.Body.Close()
 
 	for res.Header.Get("X-Continuation-Token") != "" {
-		res = httpGetRequest("/" + url.QueryEscape(xuid) + "/screenshots?continuationToken=" + res.Header.Get("X-Continuation-Token"))
+		res = authGetRequest("/" + url.QueryEscape(xuid) + "/screenshots?continuationToken=" + res.Header.Get("X-Continuation-Token"))
 		defer res.Body.Close()
 
 		extraScreenshots := []screenshot{}
@@ -43,7 +43,8 @@ func extractScreenshotsMetadata(userScreenshots *[]screenshot) []formattedScreen
 		for _, uri := range screenshot.Screenshoturis {
 			if uri.Uritype == "Download" {
 				formattedScreenshot.URI = uri.URI
-				formattedScreenshot.gameTitle = screenshot.Titlename
+				formattedScreenshot.GameTitle = screenshot.Titlename
+				formattedScreenshot.ID = screenshot.Screenshotid
 				bytes += uri.Filesize
 				break
 			}

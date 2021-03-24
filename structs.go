@@ -1,6 +1,7 @@
 package main
 
 type clip struct {
+	Gameclipid   string `json:"gameClipId"`
 	Gameclipuris []struct {
 		URI      string  `json:"uri"`
 		Filesize float64 `json:"fileSize"`
@@ -10,11 +11,13 @@ type clip struct {
 }
 
 type formattedClip struct {
-	gameTitle string
+	ID        string
+	GameTitle string
 	URI       string
 }
 
 type screenshot struct {
+	Screenshotid   string `json:"screenshotId"`
 	Screenshoturis []struct {
 		URI      string  `json:"uri"`
 		Filesize float64 `json:"fileSize"`
@@ -24,6 +27,7 @@ type screenshot struct {
 }
 
 type formattedScreenshot struct {
-	gameTitle string
+	ID        string
+	GameTitle string
 	URI       string
 }
