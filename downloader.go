@@ -14,17 +14,18 @@ func orchestrateDownloads(clips []formattedClip, screenshots []formattedScreensh
 	totalCount := len(clips) + len(screenshots)
 	printProgress(0, totalCount)
 
-	for i, clip := range clips {
-		download(clip.URI, fmt.Sprintf("%s/%s_%s.mp4", folderPath, clip.GameTitle, clip.ID))
+	for i, screenshot := range screenshots {
+		download(screenshot.URI, fmt.Sprintf("%s/%s_%s.png", folderPath, screenshot.GameTitle, screenshot.ID))
 		printProgress(i+1, totalCount)
 	}
 
 	i := len(clips)
-	for _, screenshot := range screenshots {
-		download(screenshot.URI, fmt.Sprintf("%s/%s_%s.png", folderPath, screenshot.GameTitle, screenshot.ID))
+	for _, clip := range clips {
+		download(clip.URI, fmt.Sprintf("%s/%s_%s.mp4", folderPath, clip.GameTitle, clip.ID))
 		printProgress(i+1, totalCount)
 		i++
 	}
+
 	fmt.Print("\n")
 	return folderPath
 }
