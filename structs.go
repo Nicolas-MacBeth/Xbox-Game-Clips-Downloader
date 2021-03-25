@@ -1,5 +1,6 @@
 package main
 
+// clip data structure from API
 type clip struct {
 	Gameclipid   string `json:"gameClipId"`
 	Gameclipuris []struct {
@@ -10,12 +11,14 @@ type clip struct {
 	Titlename string `json:"titleName"`
 }
 
+// formatted structure for a clip after relevant metadata is extracted
 type formattedClip struct {
 	ID        string
 	GameTitle string
 	URI       string
 }
 
+// screenshot data structure from API
 type screenshot struct {
 	Screenshotid   string `json:"screenshotId"`
 	Screenshoturis []struct {
@@ -26,6 +29,7 @@ type screenshot struct {
 	Titlename string `json:"titleName"`
 }
 
+// formatted structure for a screenshot after relevant metadata is extracted
 type formattedScreenshot struct {
 	ID        string
 	GameTitle string
