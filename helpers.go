@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"time"
 )
 
@@ -50,6 +51,9 @@ func prepareDir(userPath string) string {
 	if err != nil {
 		log.Fatal("Unable to decode folder path on this system.")
 	}
+
+	regex := regexp.MustCompile(`[~"#%&*:<>?/\\{|}]+`)
+	absPath = regex.ReplaceAllString(absPath, "_")
 
 	err = os.Mkdir(absPath, os.ModePerm)
 	if err != nil {

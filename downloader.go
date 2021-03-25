@@ -10,23 +10,23 @@ import (
 
 func orchestrateDownloads(clips []formattedClip, screenshots []formattedScreenshot, downloadPath string) string {
 	wg := sync.WaitGroup{}
-	concurrencyLimiter := make(chan struct{}, 5)
+	concurrencyLimiter := make(chan int, 5)
 
 	folderPath := prepareDir(downloadPath)
 	totalCount := len(clips) + len(screenshots)
 	printProgress(0, totalCount)
 
 	for i, screenshot := range screenshots {
-		concurrencyLimiter <- struct{}{}
+		concurrencyLimiter <- i + 1
 		wg.Add(1)
-		go download(screenshot.URI, fmt.Sprintf("%s/%s_%s.png", folderPath, screenshot.GameTitle, screenshot.ID), &wg, concurrencyLimiter, i+1, totalCount)
+		go download(screenshot.URI, fmt.Sprintf("%s/%s_%s.png", folderPath, screenshot.GameTitle, screenshot.ID), &wg, concurrencyLimiter, totalCount)
 	}
 
 	i := len(clips)
 	for _, clip := range clips {
-		concurrencyLimiter <- struct{}{}
+		concurrencyLimiter <- i + 1
 		wg.Add(1)
-		go download(clip.URI, fmt.Sprintf("%s/%s_%s.mp4", folderPath, clip.GameTitle, clip.ID), &wg, concurrencyLimiter, i+1, totalCount)
+		go download(clip.URI, fmt.Sprintf("%s/%s_%s.mp4", folderPath, clip.GameTitle, clip.ID), &wg, concurrencyLimiter, totalCount)
 		i++
 	}
 
@@ -35,7 +35,7 @@ func orchestrateDownloads(clips []formattedClip, screenshots []formattedScreensh
 	return folderPath
 }
 
-func download(URI string, filePath string, wg *sync.WaitGroup, concurrencyLimiter chan struct{}, currentCount int, totalCount int) {
+func download(URI string, filePath string, wg *sync.WaitGroup, concurrencyLimiter chan int, totalCount int) {
 	res := downloadGetRequest(URI)
 	defer res.Body.Close()
 
@@ -50,7 +50,7 @@ func download(URI string, filePath string, wg *sync.WaitGroup, concurrencyLimite
 		log.Fatal("Could not download file.")
 	}
 
+	currentCount := <-concurrencyLimiter
 	printProgress(currentCount, totalCount)
-	<-concurrencyLimiter
 	wg.Done()
 }
