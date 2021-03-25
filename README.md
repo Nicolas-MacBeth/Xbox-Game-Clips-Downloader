@@ -1,3 +1,5 @@
+![Golang build status](https://github.com/Nicolas-MacBeth/Xbox-Game-Clips-Downloader/workflows/Go/badge.svg)
+
 # Xbox-Game-Clips-Downloader
 A quickly-built utility for easily bulk-downloading Xbox game DVR clips hosted on the Xbox network.
 
