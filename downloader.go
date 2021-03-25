@@ -7,10 +7,8 @@ import (
 	"os"
 )
 
-const downloadPath = "./downloaded_xbox_DVR_clips_screenshots_"
-
-func orchestrateDownloads(clips []formattedClip, screenshots []formattedScreenshot) string {
-	folderPath := prepareDir()
+func orchestrateDownloads(clips []formattedClip, screenshots []formattedScreenshot, downloadPath string) string {
+	folderPath := prepareDir(downloadPath)
 	totalCount := len(clips) + len(screenshots)
 	printProgress(0, totalCount)
 

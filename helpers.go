@@ -5,11 +5,13 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 )
 
 const (
-	baseURL = "https://xapi.us/v2"
+	baseURL      = "https://xapi.us/v2"
+	downloadPath = "/xbox_DVR_downloads_"
 )
 
 func authGetRequest(urlSuffix string, authToken string) *http.Response {
@@ -35,15 +37,26 @@ func downloadGetRequest(URI string) *http.Response {
 	return res
 }
 
-func prepareDir() string {
-	t := time.Now()
-	folderPath := downloadPath + fmt.Sprintf("%d-%d-%d_%dh%dm%ds", t.Year(), t.Month(), t.Day(),
-		t.Hour(), t.Minute(), t.Second())
-	err := os.Mkdir(folderPath, os.ModePerm)
-	if err != nil {
-		log.Fatal("Unable to create target download folder. Do you have the correct permissions?")
+func prepareDir(userPath string) string {
+	if userPath == "" {
+		userPath = "."
 	}
-	return folderPath
+
+	t := time.Now()
+	folderPath := userPath + downloadPath + fmt.Sprintf("%d-%d-%d_%dh%dm%ds", t.Year(), t.Month(), t.Day(),
+		t.Hour(), t.Minute(), t.Second())
+
+	absPath, err := filepath.Abs(folderPath)
+	if err != nil {
+		log.Fatal("Unable to decode folder path on this system.")
+	}
+
+	err = os.Mkdir(absPath, os.ModePerm)
+	if err != nil {
+		log.Fatal("Unable to create target download folder. Did you make a typo, or are you lacking the correct permissions?")
+	}
+
+	return absPath
 }
 
 func printProgress(current int, total int) {

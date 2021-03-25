@@ -2,18 +2,18 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"path/filepath"
+	"strings"
 )
 
 func main() {
 	greetUser()
+	downloadPath := strings.TrimSpace(askUserForInfo("Please enter the path where you'd like the download folder be created (relative or absolute).\nIf you enter nothing, the folder will be created in the current working directory."))
 	authToken := askUserForInfo("Please visit https://xapi.us/ and enter your API key:")
 	gamertag := askUserForInfo("Please enter your Xbox network gamertag:")
 	xuid := getXUID(gamertag, authToken)
 	clips := getClips(xuid, authToken)
 	screenshots := getScreenshots(xuid, authToken)
-	dir := orchestrateDownloads(clips, screenshots)
+	dir := orchestrateDownloads(clips, screenshots, downloadPath)
 	farewellUser(dir)
 }
 
@@ -22,12 +22,8 @@ func greetUser() {
 	fmt.Println("Let's get started.")
 }
 
-func farewellUser(dir string) {
+func farewellUser(path string) {
 	fmt.Println("Download complete!")
-	path, err := filepath.Abs(dir)
-	if err != nil {
-		log.Fatal("Error resolving path, but download was completed successfully.")
-	}
 	fmt.Printf("Your downloaded clips and screenshots can be found at %s\n", path)
 	fmt.Println("Thanks for using this tool to download all your game DVR content!")
 }
