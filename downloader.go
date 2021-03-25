@@ -5,12 +5,14 @@ import (
 	"io"
 	"log"
 	"os"
+	"regexp"
 	"sync"
 )
 
 func orchestrateDownloads(clips []formattedClip, screenshots []formattedScreenshot, downloadPath string) string {
 	wg := sync.WaitGroup{}
 	concurrencyLimiter := make(chan int, 5)
+	regex := regexp.MustCompile("[~\"#%&*:<>?/\\{|}]+")
 
 	folderPath := prepareDir(downloadPath)
 	totalCount := len(clips) + len(screenshots)
@@ -19,14 +21,14 @@ func orchestrateDownloads(clips []formattedClip, screenshots []formattedScreensh
 	for i, screenshot := range screenshots {
 		concurrencyLimiter <- i + 1
 		wg.Add(1)
-		go download(screenshot.URI, fmt.Sprintf("%s/%s_%s.png", folderPath, screenshot.GameTitle, screenshot.ID), &wg, concurrencyLimiter, totalCount)
+		go download(screenshot.URI, fmt.Sprintf("%s/%s_%s.png", folderPath, regex.ReplaceAllString(screenshot.GameTitle, "_"), regex.ReplaceAllString(screenshot.ID, "_")), &wg, concurrencyLimiter, totalCount)
 	}
 
 	i := len(clips)
 	for _, clip := range clips {
 		concurrencyLimiter <- i + 1
 		wg.Add(1)
-		go download(clip.URI, fmt.Sprintf("%s/%s_%s.mp4", folderPath, clip.GameTitle, clip.ID), &wg, concurrencyLimiter, totalCount)
+		go download(clip.URI, fmt.Sprintf("%s/%s_%s.mp4", folderPath, regex.ReplaceAllString(clip.GameTitle, "_"), regex.ReplaceAllString(clip.ID, "_")), &wg, concurrencyLimiter, totalCount)
 		i++
 	}
 
