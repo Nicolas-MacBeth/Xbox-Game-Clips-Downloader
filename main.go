@@ -26,8 +26,8 @@ func main() {
 
 // give a proper welcome to the user :)
 func greetUser() {
-	fmt.Println("Welcome to Nic MacBeth's 'Xbox network' game clips downloader!")
-	fmt.Println("Let's get started.")
+	fmt.Println("\nWelcome to Nic MacBeth's 'Xbox network' game clips bulk downloader.")
+	fmt.Println("Let's get started!")
 }
 
 // say goodbye to the beloved user :(
@@ -35,4 +35,5 @@ func farewellUser(path string) {
 	fmt.Println("Download complete!")
 	fmt.Printf("Your downloaded clips and screenshots can be found at %s\n", path)
 	fmt.Println("Thanks for using this tool to download all your game DVR content!")
+	fmt.Println("- Nic MacBeth")
 }
