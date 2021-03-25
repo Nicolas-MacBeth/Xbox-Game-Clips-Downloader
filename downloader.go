@@ -30,7 +30,7 @@ func orchestrateDownloads(clips []formattedClip, screenshots []formattedScreensh
 	}
 
 	// loop over clips and download each
-	i := len(clips)
+	i := len(screenshots)
 	for _, clip := range clips {
 		concurrencyLimiter <- i + 1
 		wg.Add(1)
